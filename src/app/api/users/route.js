@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 
 import { PrismaClient } from "@prisma/client";
 
-import { validateUser, validateItem } from "@/utils/helpers/apiHelpers";
+import { validateUser } from "@/utils/helpers/apiHelpers";
 
 const prisma = new PrismaClient();
 
-// CREATING NEW ITEM
+// CREATING NEW USER
 
 export async function POST(req) {
   let body;
@@ -18,34 +18,33 @@ export async function POST(req) {
   }
 
   try {
-    const { hasErrors, errors } = validateItem(body);
+    const { hasErrors, errors } = validateUser(body);
 
     if (hasErrors) {
       return NextResponse.json(errors);
     }
-    let quantity = body.quantity >= 0 ? quantity : body.quantity * -1;
 
-    const item = await prisma.item.create({
+    const user = await prisma.user.create({
       data: {
         name: body.name,
-        quantity,
-        category: body.category,
+        email: body.email,
+        password: body.password,
       },
     });
 
-    return NextResponse.json({ item }, { status: 201 });
+    return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: e }, { status: 400 });
   }
 }
 
-// GETTING ITEMS
+// GETTING USER
 
 export async function GET(req, options) {
   try {
-    const items = await prisma.item.findMany();
+    const users = await prisma.user.findMany();
 
-    return NextResponse.json(items, { status: 200 });
+    return NextResponse.json(users, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 404 });
   }
