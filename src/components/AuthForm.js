@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth";
-import { validateUser } from "@/utils/helpers/apiHelpers";
 
 function AuthForm() {
   const router = useRouter();

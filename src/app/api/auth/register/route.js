@@ -11,9 +11,9 @@ export async function POST(req) {
   let body;
   try {
     body = await req.json();
-    if (!body.email || !body.password || !body.name) {
-      throw new Error();
-    }
+    // if (!body.email || !body.password || !body.name) {
+    //   throw new Error();
+    // }
   } catch (error) {
     return NextResponse.json(
       {

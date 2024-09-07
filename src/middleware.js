@@ -4,12 +4,8 @@ import { verifyJWT } from "./utils/helpers/authHelpers";
 const unsafeMethods = ["POST", "PUT", "DELETE"];
 
 export async function middleware(req) {
-  console.log("Middleware is running", req.url.pathname);
-  const url = new URL(req.url);
-  if (
-    unsafeMethods.includes(req.method) ||
-    url.pathname.includes("api/users")
-  ) {
+  console.log("Middleware is running");
+  if (unsafeMethods.includes(req.method)) {
     console.log("VERIFY");
     try {
       const bearer = req.headers.get("Authorization") || "";
@@ -37,11 +33,9 @@ export async function middleware(req) {
 
 export const config = {
   matcher: [
-    "/api/authors/",
-    "/api/authors/:path*",
-    "/api/books/",
-    "/api/books/import",
-    "/api/books/:path*",
+    "/api/items/",
+    "/api/items/:path*",
+    "/api/users",
     "/api/users/:path*",
     "/api/users/me",
   ],
