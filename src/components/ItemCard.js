@@ -34,6 +34,7 @@ function ItemCard({ item }) {
       console.log("An error occured", error.message);
     }
   };
+
   return (
     <div className="py-4 px-6 bg-white rounded-lg shadow-md max-w-lg min-w-full">
       <div className="text-xl font-semibold text-gray-800">{item.name}</div>
@@ -56,13 +57,21 @@ function ItemCard({ item }) {
           </p>
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <button
             className="flex items-center bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-300"
             onClick={(itemId) => handleDelete(item.id)}
           >
             <i className="fas fa-trash"></i>
           </button>
+          <button
+            className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+            value={item.id}
+            onClick={(itemId) => {}}
+          >
+            <i className="fas fa-edit"></i>
+          </button>
+
           {error && <p className="text-red-500 mb-4">{error}</p>}
         </div>
       </div>
