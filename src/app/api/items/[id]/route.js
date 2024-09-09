@@ -19,3 +19,17 @@ export async function GET(req, options) {
     return NextResponse.json({ error: error.message }, { status: 404 });
   }
 }
+
+export async function DELETE(req, options) {
+  const itemId = options.params.id;
+
+  try {
+    await prisma.item.delete({ where: { id: Number(itemId) } });
+
+    return new Response(null, { status: 204 });
+  } catch (error) {
+    console.log(error);
+
+    return NextResponse.json(error, { status: 400 });
+  }
+}

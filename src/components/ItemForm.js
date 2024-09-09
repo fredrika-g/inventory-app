@@ -29,7 +29,7 @@ function ItemForm() {
       },
       body: JSON.stringify({
         name,
-        description,
+        description: description ? description : null,
         quantity,
         category,
       }),
@@ -39,6 +39,7 @@ function ItemForm() {
       const data = await response.json();
 
       console.log("data", data);
+      router.refresh();
       return;
     }
 
@@ -46,59 +47,71 @@ function ItemForm() {
       console.log(response);
       setError("Bad request");
     }
+
+    router.refresh();
   }
 
   return (
-    <div>
-      ItemForm
-      <form className="form bg-white" onSubmit={handleSubmit}>
-        <div className="form__group">
-          <label className="form__label">Name</label>
+    <div className="max-w-md mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">Item Form</h2>
+      <form className="bg-white p-6 rounded-lg shadow" onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Name</label>
           <input
-            className="form__input"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
             type="text"
             value={name}
             onChange={(e) => {
               setName(e.target.value);
             }}
-          ></input>
+          />
         </div>
-        <div className="form__group">
-          <label className="form__label">Description</label>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">
+            Description
+          </label>
           <input
-            className="form__input"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
             type="text"
             value={description}
             onChange={(e) => {
               setDescription(e.target.value);
             }}
-          ></input>
+          />
         </div>
-        <div className="form__group">
-          <label className="form__label">Quantity</label>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">
+            Quantity
+          </label>
           <input
-            className="form__input"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
             type="text"
             value={quantity}
             onChange={(e) => {
               setQuantity(e.target.value);
             }}
-          ></input>
+          />
         </div>
-        <div className="form__group">
-          <label className="form__label">Category</label>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">
+            Category
+          </label>
           <input
-            className="form__input"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
             type="text"
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
             }}
-          ></input>
+          />
         </div>
 
-        {error && <p className="text-red-500">{error}</p>}
-        <button type="submit" className="form__button form__button--primary">
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+
+        <button
+          type="submit"
+          className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition duration-300"
+        >
           Add item
         </button>
       </form>
