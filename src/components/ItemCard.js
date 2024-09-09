@@ -2,10 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth";
+import { useState } from "react";
 
 function ItemCard({ item }) {
   const router = useRouter();
   const auth = useAuth();
+  const [error, setError] = useState("");
+
   const handleDelete = async (itemId) => {
     try {
       const response = await fetch(
@@ -23,13 +26,16 @@ function ItemCard({ item }) {
 
       if (response.ok) {
         router.refresh();
+      } else {
+        console.log(response);
+        setError(response.error);
       }
     } catch (error) {
       console.log("An error occured", error.message);
     }
   };
   return (
-    <div className="py-4 px-6 bg-white rounded-lg shadow-md max-w-lg min-w-full hover:cursor-pointer">
+    <div className="py-4 px-6 bg-white rounded-lg shadow-md max-w-lg min-w-full">
       <div className="text-xl font-semibold text-gray-800">{item.name}</div>
 
       <div className="flex gap-6">
@@ -57,6 +63,7 @@ function ItemCard({ item }) {
           >
             <i className="fas fa-trash"></i>
           </button>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
         </div>
       </div>
     </div>

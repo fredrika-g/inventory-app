@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth";
 
+import categories from "@/app/data/itemCategories";
+
 function ItemForm() {
   const router = useRouter();
   const auth = useAuth();
@@ -85,7 +87,8 @@ function ItemForm() {
           </label>
           <input
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
-            type="text"
+            type="number"
+            min="0"
             value={quantity}
             onChange={(e) => {
               setQuantity(e.target.value);
@@ -96,14 +99,18 @@ function ItemForm() {
           <label className="block text-gray-700 font-medium mb-2">
             Category
           </label>
-          <input
+          <select
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
-            type="text"
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
             }}
-          />
+          >
+            {categories &&
+              categories.map((category) => {
+                return <option value={category.name}>{category.name}</option>;
+              })}
+          </select>
         </div>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
