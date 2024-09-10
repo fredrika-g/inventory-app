@@ -40,21 +40,20 @@ function ItemForm() {
     if (response.ok && response.status != 400) {
       const data = await response.json();
 
-      console.log("data", data);
       router.refresh();
       return;
     }
 
     if (response.status == 400) {
-      console.log(response);
-      setError("Bad request");
+      const body = await response.json();
+      setError(body.error);
     }
 
     router.refresh();
   }
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
+    <div className="w-72 mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4 text-gray-800">Item Form</h2>
       <form className="bg-white p-6 rounded-lg shadow" onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -117,7 +116,7 @@ function ItemForm() {
           </select>
         </div>
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error && <p className="text-red-500 mb-4 w-full">{error}</p>}
 
         <button
           type="submit"

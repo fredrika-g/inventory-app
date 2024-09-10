@@ -26,5 +26,4 @@ model Item {
   description String?
   quantity    Int
   category    String
-  // Fields: id, name, description, quantity, category
 }

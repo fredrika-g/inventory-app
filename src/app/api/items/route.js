@@ -9,12 +9,10 @@ const prisma = new PrismaClient();
 // CREATING NEW ITEM
 
 export async function POST(req) {
-  console.log(req);
   let body;
 
   try {
     body = await req.json();
-    console.log(body);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
@@ -23,8 +21,21 @@ export async function POST(req) {
     const { hasErrors, errors } = validateItem(body);
 
     if (hasErrors) {
-      return NextResponse.json({ error: errors }, { status: 400 });
+      throw new Error(JSON.stringify(errors));
     }
+  } catch (error) {
+    const errorMessage = JSON.parse(error.message);
+    console.log(errorMessage);
+    let errorArr = [];
+    for (const [key, value] of Object.entries(errorMessage)) {
+      errorArr.push(value);
+    }
+
+    errorArr = errorArr.join();
+    return NextResponse.json({ error: errorArr }, { status: 400 });
+  }
+
+  try {
     let quantity =
       Number(body.quantity) >= 0
         ? Number(body.quantity)

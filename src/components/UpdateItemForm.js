@@ -40,7 +40,6 @@ function UpdateItemForm({ selectedItem, visible }) {
 
     if (response.ok) {
       const updatedItem = await response.json();
-      console.log(updatedItem);
       router.refresh();
     }
 
