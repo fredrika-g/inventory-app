@@ -1,13 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth";
-import { useState } from "react";
 
-function ItemCard({ item }) {
+import UpdateItemForm from "./UpdateItemForm";
+
+function ItemCard({ item, onEdit }) {
   const router = useRouter();
   const auth = useAuth();
   const [error, setError] = useState("");
+
+  const [visible, setVisible] = useState(false);
 
   const handleDelete = async (itemId) => {
     try {
@@ -67,7 +71,9 @@ function ItemCard({ item }) {
           <button
             className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
             value={item.id}
-            onClick={(itemId) => {}}
+            onClick={() => {
+              visible ? setVisible(false) : setVisible(true);
+            }}
           >
             <i className="fas fa-edit"></i>
           </button>
@@ -75,6 +81,7 @@ function ItemCard({ item }) {
           {error && <p className="text-red-500 mb-4">{error}</p>}
         </div>
       </div>
+      <UpdateItemForm selectedItem={item} visible={visible}></UpdateItemForm>
     </div>
   );
 }

@@ -2,6 +2,8 @@ import ItemForm from "@/components/ItemForm";
 import ItemCard from "@/components/ItemCard";
 import UpdateItemForm from "@/components/UpdateItemForm";
 
+import ItemSection from "@/components/ItemSection";
+
 export default async function Home() {
   const items = await fetch("http:localhost:3000/api/items", {
     cache: "no-store",
@@ -13,17 +15,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen w-full py-6">
-      <div className="flex justify-center align-center">
-        <ItemForm></ItemForm>
-        <UpdateItemForm></UpdateItemForm>
-        <section className="flex flex-col items-center justify-start px-8 max-w-lg mx-auto gap-6">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Items</h2>
-          {items &&
-            items.map((item) => {
-              return <ItemCard key={item.id} item={item}></ItemCard>;
-            })}
-        </section>
-      </div>
+      <ItemSection items={items}></ItemSection>
     </main>
   );
 }

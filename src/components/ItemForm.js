@@ -108,7 +108,11 @@ function ItemForm() {
           >
             {categories &&
               categories.map((category) => {
-                return <option value={category.name}>{category.name}</option>;
+                return (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                );
               })}
           </select>
         </div>

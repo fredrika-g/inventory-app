@@ -7,68 +7,59 @@ import { useAuth } from "@/context/auth";
 
 import categories from "@/app/data/itemCategories";
 
-function UpdateItemForm({id}) {
-
+function UpdateItemForm({ selectedItem, visible }) {
+  const [name, setName] = useState(selectedItem?.name || "");
+  const [description, setDescription] = useState(
+    selectedItem?.description || ""
+  );
+  const [quantity, setQuantity] = useState(selectedItem?.quantity || "0");
+  const [category, setCategory] = useState(selectedItem?.category || "");
 
   const router = useRouter();
   const auth = useAuth();
 
-  const [showMe, setShowMe] = useState(false)
-
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState("0");
-  const [category, setCategory] = useState("");
   const [error, setError] = useState("");
 
-  const [itemId, setItemId] = useState(null)
-
-  if(id){
-    setShowMe(true)
-  }
-
-  async function handleUpdate(itemId) {
+  async function handleUpdate(e) {
     e.preventDefault();
     setError("");
 
-    console.log("ITEM ID FROM CARD: ",itemId)
-
-
-    const url = "/api/items";
-
-    const response = await fetch(url, {
-      method: "POST",
+    const response = await fetch(`/api/items/${selectedItem.id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${auth.token}`,
       },
       body: JSON.stringify({
         name,
-        description: description ? description : null,
-        quantity,
+        description,
+        quantity: Number(quantity),
         category,
       }),
     });
 
-    if (response.ok && response.status != 400) {
-      const data = await response.json();
-
-      console.log("data", data);
+    if (response.ok) {
+      const updatedItem = await response.json();
+      console.log(updatedItem);
       router.refresh();
-      return;
     }
 
     if (response.status == 400) {
-      console.log(response);
-      setError("Bad request");
+      const body = await response.json();
+      setError(body.error);
     }
 
     router.refresh();
   }
 
   return (
-    <div className={...showMe ? "max-w-md mx-auto p-4 bg-gray-100 rounded-lg shadow-md" : "hidden"}
-   >
+    <div
+      className={
+        visible
+          ? "max-w-md mx-auto p-4 bg-gray-100 rounded-lg shadow-md"
+          : "hidden"
+      }
+    >
       <h2 className="text-2xl font-bold mb-4 text-gray-800">Update Item</h2>
       <form className="bg-white p-6 rounded-lg shadow" onSubmit={handleUpdate}>
         <div className="mb-4">
@@ -122,7 +113,11 @@ function UpdateItemForm({id}) {
           >
             {categories &&
               categories.map((category) => {
-                return <option value={category.name}>{category.name}</option>;
+                return (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                );
               })}
           </select>
         </div>
@@ -132,8 +127,7 @@ function UpdateItemForm({id}) {
         <button
           type="submit"
           className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition duration-300"
-        
-          onClick={itemId => handleUpdate(item.id)}
+          onClick={(e) => handleUpdate(e)}
         >
           Save
         </button>
