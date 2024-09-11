@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 import { validateItem } from "@/utils/helpers/apiHelpers";
+import categories from "@/app/data/itemCategories";
 
 const prisma = new PrismaClient();
 
@@ -11,12 +12,30 @@ const prisma = new PrismaClient();
 export async function POST(req) {
   let body;
 
+  // checking if body was sent
   try {
     body = await req.json();
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
+  // checking if body contains an array of categories to filter by, if so,
+  // fetch the items that match the filtering and return those in the response
+  if (body.categories) {
+    const items = await prisma.item.findMany({
+      where: {
+        category: {
+          in: body.categories.length > 0 ? body.categories : undefined,
+        },
+      },
+    });
+
+    return NextResponse.json(items, { status: 200 });
+  }
+
+  //logic for a new item being created/posted, i.e. body does not contain "categories"
+
+  // validate the item data being sent
   try {
     const { hasErrors, errors } = validateItem(body);
 
@@ -35,6 +54,7 @@ export async function POST(req) {
     return NextResponse.json({ error: errorArr }, { status: 400 });
   }
 
+  // create the new item
   try {
     let quantity =
       Number(body.quantity) >= 0
@@ -59,6 +79,12 @@ export async function POST(req) {
 // GETTING ITEMS
 
 export async function GET(req, options) {
+  const url = new URL(req.url);
+  const categories = url.searchParams.get("categories");
+
+  if (categories) {
+    console.log("Categories", categories);
+  }
   try {
     const items = await prisma.item.findMany();
 

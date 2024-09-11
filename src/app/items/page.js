@@ -1,11 +1,7 @@
-import ItemForm from "@/components/ItemForm";
-import ItemCard from "@/components/ItemCard";
-import UpdateItemForm from "@/components/UpdateItemForm";
-
 import ItemSection from "@/components/ItemSection";
 
 export default async function Home() {
-  const items = await fetch("http:localhost:3000/api/items", {
+  const items = await fetch("http://localhost:3000/api/items", {
     cache: "no-store",
   })
     .then((response) => response.json())
@@ -15,7 +11,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen w-full py-6">
-      <ItemSection items={items}></ItemSection>
+      <ItemSection initialItems={items}></ItemSection>
     </main>
   );
 }

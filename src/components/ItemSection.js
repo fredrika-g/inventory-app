@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/context/auth";
 import ItemCard from "./ItemCard";
 import ItemForm from "./ItemForm";
 
 import categories from "@/app/data/itemCategories";
 
-function ItemSection({ items }) {
+function ItemSection({ initialItems }) {
+  const auth = useAuth();
+
+  const [items, setItems] = useState(initialItems);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [inStockFilter, setInStockFilter] = useState("all");
 
@@ -23,22 +27,37 @@ function ItemSection({ items }) {
     });
   };
 
+  // fetching items based on chosen categories
+  useEffect(() => {
+    const fetchFilteredItems = async () => {
+      const res = await fetch("http://localhost:3000/api/items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
+        body: JSON.stringify({ categories: selectedCategories }),
+      });
+      const data = await res.json();
+      setItems(data); // Uppdatera items baserat på API-svaret
+    };
+
+    // if categories are chosen, fetch data
+    if (selectedCategories.length > 0) {
+      fetchFilteredItems();
+    } else {
+      setItems(initialItems); // if no categories are chosen, set items array to initial item data
+    }
+    // run again if categories are chosen
+  }, [selectedCategories]);
+
   const handleInStockChange = (e) => {
     setInStockFilter(e.target.value);
   };
 
   const filteredItems = items.filter((item) => {
-    // if (selectedCategories.length === 0) return true;
-
-    // return selectedCategories.includes(item.category);
-
-    // Filtrera efter kategori om några är valda
-    const categoryMatch =
-      selectedCategories.length === 0 ||
-      selectedCategories.includes(item.category);
-
-    // Filtrera efter lagerstatus
-    let inStockMatch = true; // Standardvärde om "all" är valt
+    // filter by availablity (quantity)
+    let inStockMatch = true; // default if the "both" option is chosen
     if (inStockFilter === "inStock") {
       inStockMatch = item.quantity > 0;
     } else if (inStockFilter === "outOfStock") {
@@ -47,8 +66,8 @@ function ItemSection({ items }) {
       inStockMatch = true;
     }
 
-    // Returnera true om både kategori- och lagerfiltret matchar
-    return categoryMatch && inStockMatch;
+    // Return as either true or false
+    return inStockMatch;
   });
 
   return (
@@ -122,9 +141,7 @@ function ItemSection({ items }) {
             return <ItemCard key={item.id} item={item}></ItemCard>;
           })
         ) : (
-          <p className="text-gray-600">
-            No items match the selected categories.
-          </p>
+          <p className="text-gray-600">No items match the selected criteria.</p>
         )}
       </section>
     </div>
