@@ -43,7 +43,7 @@ function ItemCard({ item, onEdit }) {
     <div className="py-4 px-6 bg-white rounded-lg shadow-md max-w-lg min-w-full">
       <div className="text-xl font-semibold text-gray-800">{item.name}</div>
 
-      <div className="flex gap-6">
+      <div className="flex justify-between gap-6">
         <div className="flex flex-col">
           <p className="mt-2 text-gray-600">
             <span className="font-medium text-gray-700">Quantity:</span>{" "}

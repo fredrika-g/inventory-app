@@ -8,7 +8,7 @@ import categories from "@/app/data/itemCategories";
 
 function ItemSection({ items }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [inStockChecked, setInStockChecked] = useState("all");
+  const [inStockFilter, setInStockFilter] = useState("all");
 
   const handleCategoryChange = (categoryName) => {
     setSelectedCategories((prevSelectedCategories) => {
@@ -23,15 +23,32 @@ function ItemSection({ items }) {
     });
   };
 
-  const onRadioChange = (e) => {
-    setInStockChecked(e.target.value);
-    console.log(inStockChecked);
+  const handleInStockChange = (e) => {
+    setInStockFilter(e.target.value);
   };
 
   const filteredItems = items.filter((item) => {
-    if (selectedCategories.length === 0) return true;
+    // if (selectedCategories.length === 0) return true;
 
-    return selectedCategories.includes(item.category);
+    // return selectedCategories.includes(item.category);
+
+    // Filtrera efter kategori om några är valda
+    const categoryMatch =
+      selectedCategories.length === 0 ||
+      selectedCategories.includes(item.category);
+
+    // Filtrera efter lagerstatus
+    let inStockMatch = true; // Standardvärde om "all" är valt
+    if (inStockFilter === "inStock") {
+      inStockMatch = item.quantity > 0;
+    } else if (inStockFilter === "outOfStock") {
+      inStockMatch = item.quantity === 0;
+    } else {
+      inStockMatch = true;
+    }
+
+    // Returnera true om både kategori- och lagerfiltret matchar
+    return categoryMatch && inStockMatch;
   });
 
   return (
@@ -54,7 +71,9 @@ function ItemSection({ items }) {
                   className="mr-2"
                   id={`checkbox${category.id}`}
                 />
-                <label for={`checkbox${category.id}`}>{category.name}</label>
+                <label htmlFor={`checkbox${category.id}`}>
+                  {category.name}
+                </label>
               </div>
             ))}
           </div>
@@ -66,23 +85,23 @@ function ItemSection({ items }) {
               <input
                 type="radio"
                 name="stockRadio"
-                value={true}
-                id="isInStock"
-                checked={inStockChecked === "true"}
-                onChange={onRadioChange}
+                value="inStock"
+                id="inStock"
+                checked={inStockFilter === "inStock"}
+                onChange={handleInStockChange}
               ></input>
-              <label for="isInStock">Yes</label>
+              <label htmlFor="inStock">Yes</label>
             </div>
             <div className="flex gap-1">
               <input
                 type="radio"
                 name="stockRadio"
-                value={false}
-                id="notInStock"
-                checked={inStockChecked === "false"}
-                onChange={onRadioChange}
+                value="outOfStock"
+                id="outOfStock"
+                checked={inStockFilter === "outOfStock"}
+                onChange={handleInStockChange}
               ></input>
-              <label for="notInStock">No</label>
+              <label htmlFor="outOfStock">No</label>
             </div>
             <div className="flex gap-1">
               <input
@@ -90,10 +109,10 @@ function ItemSection({ items }) {
                 name="stockRadio"
                 value="all"
                 id="bothStockRadio"
-                checked={inStockChecked === "all"}
-                onChange={onRadioChange}
+                checked={inStockFilter === "all"}
+                onChange={handleInStockChange}
               ></input>
-              <label for="bothStockRadio">Both</label>
+              <label htmlFor="bothStockRadio">Both</label>
             </div>
           </div>
         </div>

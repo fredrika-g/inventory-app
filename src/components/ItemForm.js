@@ -40,6 +40,11 @@ function ItemForm() {
     if (response.ok && response.status != 400) {
       const data = await response.json();
 
+      setName("");
+      setDescription("");
+      setQuantity("0");
+      setCategory("");
+
       router.refresh();
       return;
     }
@@ -53,7 +58,7 @@ function ItemForm() {
   }
 
   return (
-    <div className="w-72 mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
+    <div className="h-fit w-72 mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4 text-gray-800">Item Form</h2>
       <form className="bg-white p-6 rounded-lg shadow" onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -105,6 +110,9 @@ function ItemForm() {
               setCategory(e.target.value);
             }}
           >
+            <option disabled value="">
+              Choose category
+            </option>
             {categories &&
               categories.map((category) => {
                 return (

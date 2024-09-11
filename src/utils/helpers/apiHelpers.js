@@ -24,7 +24,7 @@ export const validateItem = (item) => {
     errors.name = "Name is a required field";
   }
 
-  if (!item.quantity) {
+  if (item.quantity == null) {
     errors.quantity = "Quantity is a required field";
   }
 
