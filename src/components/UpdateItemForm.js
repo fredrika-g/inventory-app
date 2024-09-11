@@ -7,7 +7,7 @@ import { useAuth } from "@/context/auth";
 
 import categories from "@/app/data/itemCategories";
 
-function UpdateItemForm({ selectedItem, visible }) {
+function UpdateItemForm({ selectedItem, visible, updateItemState }) {
   const [name, setName] = useState(selectedItem?.name || "");
   const [description, setDescription] = useState(
     selectedItem?.description || ""
@@ -36,19 +36,18 @@ function UpdateItemForm({ selectedItem, visible }) {
         quantity: Number(quantity),
         category,
       }),
+      cache: "no-cache",
     });
 
     if (response.ok) {
       const updatedItem = await response.json();
-      router.refresh();
+      updateItemState(updatedItem);
     }
 
     if (response.status == 400) {
       const body = await response.json();
       setError(body.error);
     }
-
-    router.refresh();
   }
 
   return (
@@ -126,7 +125,6 @@ function UpdateItemForm({ selectedItem, visible }) {
         <button
           type="submit"
           className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition duration-300"
-          onClick={(e) => handleUpdate(e)}
         >
           Save
         </button>

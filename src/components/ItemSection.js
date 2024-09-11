@@ -14,6 +14,24 @@ function ItemSection({ initialItems }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [inStockFilter, setInStockFilter] = useState("all");
 
+  // Funktion för att uppdatera ett item i state
+  const updateItemState = (updatedItem) => {
+    setItems((prevItems) =>
+      prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  };
+
+  // Funktion för att lägga till ett nytt item i state
+  // const addItem = (newItem) => {
+  //   setItems((prevItems) => {
+  //     console.log("PREV ITEMS", prevItems);
+  //     console.log("NEW ITEM", newItem);
+  //     const updatedItems = [...prevItems];
+  //     updatedItems.push(newItem);
+  //     return updatedItems;
+  //   }); // Lägg till det nya itemet högst upp
+  // };
+
   const handleCategoryChange = (categoryName) => {
     setSelectedCategories((prevSelectedCategories) => {
       // Om kategorin redan finns i listan, ta bort den
@@ -37,6 +55,7 @@ function ItemSection({ initialItems }) {
           Authorization: `Bearer ${auth.token}`,
         },
         body: JSON.stringify({ categories: selectedCategories }),
+        cache: "no-cache",
       });
       const data = await res.json();
       setItems(data); // Uppdatera items baserat på API-svaret
@@ -72,7 +91,7 @@ function ItemSection({ initialItems }) {
 
   return (
     <div className="flex justify-center align-center">
-      <ItemForm></ItemForm>
+      <ItemForm items={items}></ItemForm>
 
       <section className="flex flex-col items-center justify-start px-8 max-w-lg mx-auto gap-6">
         <h2 className="text-2xl font-bold mb-4 text-gray-800">Items</h2>
@@ -138,7 +157,13 @@ function ItemSection({ initialItems }) {
 
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => {
-            return <ItemCard key={item.id} item={item}></ItemCard>;
+            return (
+              <ItemCard
+                key={item.id}
+                item={item}
+                updateItemState={updateItemState}
+              ></ItemCard>
+            );
           })
         ) : (
           <p className="text-gray-600">No items match the selected criteria.</p>

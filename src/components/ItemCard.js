@@ -6,7 +6,7 @@ import { useAuth } from "@/context/auth";
 
 import UpdateItemForm from "./UpdateItemForm";
 
-function ItemCard({ item, onEdit }) {
+function ItemCard({ item, updateItemState }) {
   const router = useRouter();
   const auth = useAuth();
   const [error, setError] = useState("");
@@ -23,17 +23,14 @@ function ItemCard({ item, onEdit }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth.token}`,
           },
+          cache: "no-cache",
         }
       )
-        .then((response) => response.json())
-        .catch((error) => console.log("Couldn't delete item", error));
-
-      if (response.ok) {
-        router.refresh();
-      } else {
-        console.log(response);
-        setError(response.error);
-      }
+        .then((response) => router.refresh())
+        .catch((error) => {
+          setError(response.error);
+          console.log("Couldn't delete item", error);
+        });
     } catch (error) {
       console.log("An error occured", error.message);
     }
@@ -81,7 +78,11 @@ function ItemCard({ item, onEdit }) {
           {error && <p className="text-red-500 mb-4">{error}</p>}
         </div>
       </div>
-      <UpdateItemForm selectedItem={item} visible={visible}></UpdateItemForm>
+      <UpdateItemForm
+        selectedItem={item}
+        visible={visible}
+        updateItemState={updateItemState}
+      ></UpdateItemForm>
     </div>
   );
 }

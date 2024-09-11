@@ -2,7 +2,7 @@ import ItemSection from "@/components/ItemSection";
 
 export default async function Home() {
   const items = await fetch("http://localhost:3000/api/items", {
-    cache: "no-store",
+    cache: "no-cache",
   })
     .then((response) => response.json())
     .catch((error) => {

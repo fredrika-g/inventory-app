@@ -7,7 +7,7 @@ import { useAuth } from "@/context/auth";
 
 import categories from "@/app/data/itemCategories";
 
-function ItemForm() {
+function ItemForm({ items }) {
   const router = useRouter();
   const auth = useAuth();
 
@@ -16,6 +16,8 @@ function ItemForm() {
   const [quantity, setQuantity] = useState("0");
   const [category, setCategory] = useState("");
   const [error, setError] = useState("");
+
+  const [itemsList, setItemsList] = useState(items);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -35,10 +37,11 @@ function ItemForm() {
         quantity,
         category,
       }),
+      cache: "no-cache",
     });
 
-    if (response.ok && response.status != 400) {
-      const data = await response.json();
+    if (response.ok && response.status !== 400) {
+      const newItem = await response.json();
 
       setName("");
       setDescription("");
@@ -46,15 +49,12 @@ function ItemForm() {
       setCategory("");
 
       router.refresh();
-      return;
     }
 
-    if (response.status == 400) {
+    if (response.status === 400) {
       const body = await response.json();
       setError(body.error);
     }
-
-    router.refresh();
   }
 
   return (
