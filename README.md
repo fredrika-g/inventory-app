@@ -1,8 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Intruktioner för körning
 
-## Getting Started
-
-First, run the development server:
+1. Starta utvecklingsservern:
 
 ```bash
 npm run dev
@@ -14,23 +12,22 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Öppna [http://localhost:3000](http://localhost:3000) i din webbläsare.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+2. Docker & databas-config
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Applikationer använder Docker, se till att Docker finns installerat på din dator.
+Konfigurera ev filen docker-compose.yml för att ställa in porter och andra configs du önskar
 
-## Learn More
+Kör sedan
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker compose up -d
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+för att starta upp en container för projektet
 
-## Deploy on Vercel
+3. pgAdmin
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Gå till [http://localhost:5050](http://localhost:5050) för att få åtkomst till pgAdmin
