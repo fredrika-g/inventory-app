@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 import { validateItem } from "@/utils/helpers/apiHelpers";
-import categories from "@/app/data/itemCategories";
 
 const prisma = new PrismaClient();
 

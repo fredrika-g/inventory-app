@@ -46,9 +46,9 @@ function ItemForm({ refreshItem }) {
       setCategory("");
 
       router.refresh();
-    }
-
-    if (response.status === 400) {
+    } else if (response.status === 401) {
+      setError("Denied: You are not logged in");
+    } else if (response.status === 400) {
       const body = await response.json();
       setError(body.error);
     }

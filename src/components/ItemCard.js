@@ -26,6 +26,8 @@ function ItemCard({ item, refreshItem, setUpdateFormData, visible }) {
         refreshItem("delete");
 
         router.refresh();
+      } else if (response.status === 401) {
+        setError("Denied: You are not logged in");
       }
     } catch (error) {
       console.log("An error occured", error.message);
@@ -55,15 +57,15 @@ function ItemCard({ item, refreshItem, setUpdateFormData, visible }) {
           </p>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col items-end gap-2">
           <button
-            className="flex items-center bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-300"
+            className="flex items-center max-w-fit bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-300"
             onClick={(itemId) => handleDelete(item.id)}
           >
             <i className="fas fa-trash"></i>
           </button>
           <button
-            className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+            className="flex items-center max-w-fit bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
             value={item.id}
             onClick={() => setUpdateFormData(item, visible ? false : true)}
           >

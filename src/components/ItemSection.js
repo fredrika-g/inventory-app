@@ -41,6 +41,7 @@ function ItemSection({ initialItems }) {
     };
 
     getItems();
+
     setNewItemAdded(false);
     // setItemDeleted(false);
   }, [newItemAdded, itemDeleted]);
@@ -84,7 +85,7 @@ function ItemSection({ initialItems }) {
     };
 
     // if categories are chosen, fetch data
-    if (selectedCategories.length > 0) {
+    if (auth.token && selectedCategories.length > 0) {
       fetchFilteredItems();
     } else {
       setItems(initialItems); // if no categories are chosen, set items array to initial item data

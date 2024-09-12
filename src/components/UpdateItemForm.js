@@ -40,9 +40,9 @@ function UpdateItemForm({ itemToUpdate, visible, updateItemState }) {
     if (response.ok) {
       const updatedItem = await response.json();
       updateItemState(updatedItem);
-    }
-
-    if (response.status == 400) {
+    } else if (response.status === 401) {
+      setError("Denied: You are not logged in");
+    } else if (response.status === 400) {
       const body = await response.json();
       setError(body.error);
     }

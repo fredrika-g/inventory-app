@@ -6,7 +6,9 @@ const unsafeMethods = ["POST", "PUT", "DELETE"];
 export async function middleware(req) {
   console.log("Middleware is running");
 
-  if (unsafeMethods.includes(req.method)) {
+  const url = new URL(req.url);
+
+  if (unsafeMethods.includes(req.method) && url.pathname.includes("items")) {
     console.log("VERIFY");
     try {
       const bearer = req.headers.get("Authorization") || "";
