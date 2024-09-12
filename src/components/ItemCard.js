@@ -4,14 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth";
 
-import UpdateItemForm from "./UpdateItemForm";
-
-function ItemCard({ item, updateItemState }) {
+function ItemCard({ item, refreshItem, setUpdateFormData, visible }) {
   const router = useRouter();
   const auth = useAuth();
   const [error, setError] = useState("");
-
-  const [visible, setVisible] = useState(false);
 
   const handleDelete = async (itemId) => {
     try {
@@ -23,16 +19,17 @@ function ItemCard({ item, updateItemState }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${auth.token}`,
           },
-          cache: "no-cache",
         }
-      )
-        .then((response) => router.refresh())
-        .catch((error) => {
-          setError(response.error);
-          console.log("Couldn't delete item", error);
-        });
+      );
+
+      if (response.ok) {
+        refreshItem("delete");
+
+        router.refresh();
+      }
     } catch (error) {
       console.log("An error occured", error.message);
+      setError(error.message);
     }
   };
 
@@ -60,17 +57,15 @@ function ItemCard({ item, updateItemState }) {
 
         <div className="flex flex-col gap-2">
           <button
-            className="flex items-center bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-300"
+            className="flex items-center bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-300"
             onClick={(itemId) => handleDelete(item.id)}
           >
             <i className="fas fa-trash"></i>
           </button>
           <button
-            className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+            className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
             value={item.id}
-            onClick={() => {
-              visible ? setVisible(false) : setVisible(true);
-            }}
+            onClick={() => setUpdateFormData(item, visible ? false : true)}
           >
             <i className="fas fa-edit"></i>
           </button>
@@ -78,11 +73,6 @@ function ItemCard({ item, updateItemState }) {
           {error && <p className="text-red-500 mb-4">{error}</p>}
         </div>
       </div>
-      <UpdateItemForm
-        selectedItem={item}
-        visible={visible}
-        updateItemState={updateItemState}
-      ></UpdateItemForm>
     </div>
   );
 }

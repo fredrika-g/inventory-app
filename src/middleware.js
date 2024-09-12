@@ -5,11 +5,12 @@ const unsafeMethods = ["POST", "PUT", "DELETE"];
 
 export async function middleware(req) {
   console.log("Middleware is running");
+
   if (unsafeMethods.includes(req.method)) {
     console.log("VERIFY");
     try {
       const bearer = req.headers.get("Authorization") || "";
-      const token = bearer.split(" ")?.[1]; // get the token from the Authorization header through optional chaining
+      const token = bearer.split(" ")?.[1];
       if (!token) {
         throw new Error("no token submitted");
       }

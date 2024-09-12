@@ -15,14 +15,14 @@ function AuthProvider({ children }) {
   const [token, setToken] = useState(defaultState.token);
 
   useEffect(() => {
-    const _token = localStorage.getItem("@library/token");
+    const _token = localStorage.getItem("@inventory/token");
     if (_token) {
       setToken(_token);
     }
   }, []);
 
   function logout() {
-    localStorage.removeItem("@library/token");
+    localStorage.removeItem("@inventory/token");
     setToken(null);
   }
 

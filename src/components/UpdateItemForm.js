@@ -2,20 +2,18 @@
 
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth";
 
 import categories from "@/app/data/itemCategories";
 
-function UpdateItemForm({ selectedItem, visible, updateItemState }) {
-  const [name, setName] = useState(selectedItem?.name || "");
+function UpdateItemForm({ itemToUpdate, visible, updateItemState }) {
+  const [name, setName] = useState(itemToUpdate?.name || "");
   const [description, setDescription] = useState(
-    selectedItem?.description || ""
+    itemToUpdate?.description || ""
   );
-  const [quantity, setQuantity] = useState(selectedItem?.quantity || "0");
-  const [category, setCategory] = useState(selectedItem?.category || "");
+  const [quantity, setQuantity] = useState(itemToUpdate?.quantity || "0");
+  const [category, setCategory] = useState(itemToUpdate?.category || "");
 
-  const router = useRouter();
   const auth = useAuth();
 
   const [error, setError] = useState("");
@@ -24,7 +22,7 @@ function UpdateItemForm({ selectedItem, visible, updateItemState }) {
     e.preventDefault();
     setError("");
 
-    const response = await fetch(`/api/items/${selectedItem.id}`, {
+    const response = await fetch(`/api/items/${itemToUpdate.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -124,7 +122,7 @@ function UpdateItemForm({ selectedItem, visible, updateItemState }) {
 
         <button
           type="submit"
-          className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition duration-300"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
         >
           Save
         </button>

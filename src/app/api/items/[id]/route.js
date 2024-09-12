@@ -27,7 +27,7 @@ export async function DELETE(req, options) {
   try {
     await prisma.item.delete({ where: { id: Number(itemId) } });
 
-    return new Response(null, { status: 204 });
+    return NextResponse.json(null, { status: 200 });
   } catch (error) {
     console.log(error);
 

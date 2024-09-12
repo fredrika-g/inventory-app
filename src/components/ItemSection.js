@@ -6,13 +6,19 @@ import ItemCard from "./ItemCard";
 import ItemForm from "./ItemForm";
 
 import categories from "@/app/data/itemCategories";
+import UpdateItemForm from "./UpdateItemForm";
 
 function ItemSection({ initialItems }) {
   const auth = useAuth();
-
   const [items, setItems] = useState(initialItems);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [inStockFilter, setInStockFilter] = useState("all");
+  const [newItemAdded, setNewItemAdded] = useState(false);
+  const [itemDeleted, setItemDeleted] = useState(false);
+
+  //UpdateFormData variables
+  const [itemToUpdate, setItemToUpdate] = useState("");
+  const [visible, setVisible] = useState(false);
 
   // Funktion för att uppdatera ett item i state
   const updateItemState = (updatedItem) => {
@@ -21,16 +27,32 @@ function ItemSection({ initialItems }) {
     );
   };
 
+  useEffect(() => {
+    const getItems = async () => {
+      const res = await fetch("http://localhost:3000/api/items", {
+        cache: "no-cache",
+      })
+        .then((response) => response.json())
+        .catch((error) => {
+          console.log("Failed to get items", error);
+        });
+
+      setItems(res);
+    };
+
+    getItems();
+    setNewItemAdded(false);
+    // setItemDeleted(false);
+  }, [newItemAdded, itemDeleted]);
+
   // Funktion för att lägga till ett nytt item i state
-  // const addItem = (newItem) => {
-  //   setItems((prevItems) => {
-  //     console.log("PREV ITEMS", prevItems);
-  //     console.log("NEW ITEM", newItem);
-  //     const updatedItems = [...prevItems];
-  //     updatedItems.push(newItem);
-  //     return updatedItems;
-  //   }); // Lägg till det nya itemet högst upp
-  // };
+  const refreshItem = (method) => {
+    if (method === "post") {
+      setNewItemAdded(true);
+    } else {
+      setItemDeleted(true);
+    }
+  };
 
   const handleCategoryChange = (categoryName) => {
     setSelectedCategories((prevSelectedCategories) => {
@@ -89,9 +111,26 @@ function ItemSection({ initialItems }) {
     return inStockMatch;
   });
 
+  const setUpdateFormData = (itemToUpdate, visible) => {
+    if (!visible) {
+      setVisible(false);
+    } else if (visible) {
+      setItemToUpdate(itemToUpdate);
+      setVisible(true);
+    }
+  };
+
   return (
     <div className="flex justify-center align-center">
-      <ItemForm items={items}></ItemForm>
+      <ItemForm items={items} refreshItem={refreshItem}></ItemForm>
+
+      {visible && (
+        <UpdateItemForm
+          itemToUpdate={itemToUpdate}
+          visible={visible}
+          updateItemState={updateItemState}
+        ></UpdateItemForm>
+      )}
 
       <section className="flex flex-col items-center justify-start px-8 max-w-lg mx-auto gap-6">
         <h2 className="text-2xl font-bold mb-4 text-gray-800">Items</h2>
@@ -162,6 +201,9 @@ function ItemSection({ initialItems }) {
                 key={item.id}
                 item={item}
                 updateItemState={updateItemState}
+                refreshItem={refreshItem}
+                setUpdateFormData={setUpdateFormData}
+                visible={visible}
               ></ItemCard>
             );
           })

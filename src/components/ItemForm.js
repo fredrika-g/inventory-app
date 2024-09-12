@@ -7,7 +7,7 @@ import { useAuth } from "@/context/auth";
 
 import categories from "@/app/data/itemCategories";
 
-function ItemForm({ items }) {
+function ItemForm({ refreshItem }) {
   const router = useRouter();
   const auth = useAuth();
 
@@ -16,8 +16,6 @@ function ItemForm({ items }) {
   const [quantity, setQuantity] = useState("0");
   const [category, setCategory] = useState("");
   const [error, setError] = useState("");
-
-  const [itemsList, setItemsList] = useState(items);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -37,11 +35,10 @@ function ItemForm({ items }) {
         quantity,
         category,
       }),
-      cache: "no-cache",
     });
 
     if (response.ok && response.status !== 400) {
-      const newItem = await response.json();
+      refreshItem("post");
 
       setName("");
       setDescription("");
@@ -128,7 +125,7 @@ function ItemForm({ items }) {
 
         <button
           type="submit"
-          className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition duration-300"
+          className="w-full bg-green-800 text-white py-2 px-4 rounded-md hover:bg-green-900 transition duration-300"
         >
           Add item
         </button>

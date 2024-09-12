@@ -37,7 +37,7 @@ function AuthForm() {
       const data = await response.json();
 
       console.log("data", data);
-      localStorage.setItem("@library/token", data.token);
+      localStorage.setItem("@inventory/token", data.token);
       auth.setToken(data.token);
       router.push("/items");
       return;
@@ -48,60 +48,58 @@ function AuthForm() {
   console.log("Auth", auth);
 
   return (
-    <div>
-      AuthForm
-      <form className="form bg-white" onSubmit={handleSubmit}>
-        <div className="form__group">
-          <label className="form__label">Email</label>
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-semibold text-center mb-6">
+        {isLogin ? "Login" : "Register"}
+      </h2>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="flex flex-col">
+          <label className="text-gray-700 font-medium mb-2">Email</label>
           <input
-            className="form__input"
+            className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          ></input>
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
-        <div className="form__group">
-          <label className="form__label">Password</label>
+
+        <div className="flex flex-col">
+          <label className="text-gray-700 font-medium mb-2">Password</label>
           <input
-            className="form__input"
+            className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          ></input>
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
+
         {!isLogin && (
-          <div className="form__group">
-            <label className="form__label">Name</label>
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-medium mb-2">Name</label>
             <input
-              className="form__input"
+              className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="text"
               value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-            ></input>
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
         )}
-        {error && <p className="text-red-500">{error}</p>}
-        <button className="form__button form__button--primary">
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <button className="w-full bg-green-700 text-white py-2 rounded-lg font-medium hover:bg-green-800 transition-colors">
           {isLogin ? "Login" : "Register"}
         </button>
-        <p className="form__text">...or</p>
-        <div className="form__group">
-          <button
-            className="form__button form__button--secondary"
-            type="button"
-            onClick={(e) => {
-              setIsLogin(!isLogin);
-            }}
-          >
-            {!isLogin ? "Login" : "Register"}
-          </button>
-        </div>
+
+        <p className="text-center text-gray-500 mt-4">...or</p>
+
+        <button
+          className="w-full bg-gray-100 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+          type="button"
+          onClick={() => setIsLogin(!isLogin)}
+        >
+          {!isLogin ? "Login" : "Register"}
+        </button>
       </form>
     </div>
   );

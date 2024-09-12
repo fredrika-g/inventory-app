@@ -79,12 +79,6 @@ export async function POST(req) {
 // GETTING ITEMS
 
 export async function GET(req, options) {
-  const url = new URL(req.url);
-  const categories = url.searchParams.get("categories");
-
-  if (categories) {
-    console.log("Categories", categories);
-  }
   try {
     const items = await prisma.item.findMany();
 

@@ -7,20 +7,20 @@ function Header() {
   const auth = useAuth();
 
   return (
-    <header className="flex items-center justify-between bg-gray-800 p-4">
-      <h1 className="text-3xl font-bold text-white">Inventory</h1>
+    <header className="flex items-center justify-between bg-green-900 p-4">
+      <h1 className="text-3xl font-bold text-slate-100 ml-4">Inventory</h1>
       {auth.token ? (
         <Link
           href="/"
           onClick={auth.logout}
-          className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
+          className="text-sm text-black bg-slate-100 hover:bg-slate-300 px-4 py-2 rounded-md transition"
         >
           Logout
         </Link>
       ) : (
         <Link
           href="/"
-          className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded"
+          className="text-sm text-black bg-slate-100 hover:bg-slate-300 px-4 py-2 rounded-md transition"
         >
           Login
         </Link>
